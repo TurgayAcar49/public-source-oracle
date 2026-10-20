@@ -1,6 +1,6 @@
 # Builder → Intelligent Contracts — paste-ready text
 
-Fill the portal form after you deploy in Studio with your own wallet. Replace the placeholders at the bottom. Do not submit until the contract address and explorer transaction are real.
+Copy the blocks below into the GenLayer portal. Evidence must be URLs.
 
 ---
 
@@ -25,7 +25,7 @@ Source: contracts/public_source_oracle.py
 Tests: pytest tests/direct/ -v
 ```
 
-Character count of the block above is under 1,000. If the form is tighter, use the short version:
+If the form is tighter, use this short version:
 
 ```
 Reusable GenLayer Intelligent Contract that attests public JSON sources. settle() runs gl.vm.run_nondet_unsafe: leader and validators each fetch the same HTTPS URL, extract the same JSON path, and compare the value (numeric bps tolerance, exact text/bool). Typed Feed state is updated only after consensus. No UI, no LLM judgement demo, no other chain.
@@ -37,19 +37,23 @@ Public Source Oracle exists because GenLayer can fetch the web inside consensus,
 
 The non-deterministic block is explicit:
 
-- `leader_fn` calls `gl.nondet.web.get`, parses JSON, walks a dotted path (`data.price`, `rates.0.usd`), and returns a canonical record `{kind, number, text, boolean, http_status}`.
+- `leader_fn` calls `gl.nondet.web.get`, parses JSON, walks a dotted path (`data.price`, `rates.0.usd`, or `full_name`), and returns a canonical record `{kind, number, text, boolean, http_status}`.
 - `validator_fn` does not inspect only the leader’s shape. If the leader returned a value, the validator re-runs the same extraction against a fresh fetch and calls `_results_equivalent`. If the leader errored, the validator re-runs and compares classified error prefixes (`[EXPECTED]`, `[EXTERNAL]`, `[TRANSIENT]`, `[PARSE]`).
 - Storage is copied to locals before the nondet block. `self.feeds[id]` is mutated only after `run_nondet_unsafe` returns.
-
-That is the Equivalence Principle used as a reusable oracle, not as a chatbot.
 
 On-chain state is a `TreeMap[u256, Feed]` plus a name index. Each feed has creator, URL, path, kind, tolerance, pause flag, last attested value, last HTTP status, and settlement count. Numbers are stored as micro-units (`value * 1_000_000`) so storage never depends on floats.
 
 Access control is narrow: anyone registers, anyone settles an active feed, only the creator or contract owner can pause/resume.
 
+Studio deployment on Studionet:
+
+- Contract: `0x12e8fFbe898b84Aad0E336120B3Bad443207a445`
+- First feed: `oracle-repo` → `https://api.github.com/repos/TurgayAcar49/public-source-oracle` → path `full_name` → kind `text`
+- `settle(0)` finalized with consensus Accepted
+
 ## Evidence items
 
-Add each as Description + URL. File uploads are not supported.
+Add each as Description + URL.
 
 1. **Source contract**
    - Description: Intelligent Contract source (`contracts/public_source_oracle.py`) with custom `run_nondet_unsafe` leader/validator pair.
@@ -64,31 +68,37 @@ Add each as Description + URL. File uploads are not supported.
    - URL: https://github.com/TurgayAcar49/public-source-oracle/tree/main/tests/direct
 
 4. **Deployed contract**
-   - Description: Contract deployed to GenLayer from Studio with my wallet.
-   - URL: `<GenLayer explorer contract URL>`
+   - Description: Public Source Oracle deployed to GenLayer Studionet from Studio with my wallet. Address 0x12e8fFbe898b84Aad0E336120B3Bad443207a445.
+   - URL: https://explorer-studio.genlayer.com/address/0x12e8fFbe898b84Aad0E336120B3Bad443207a445
 
-5. **Settle transaction**
-   - Description: `settle` transaction that ran leader/validator consensus and wrote attested state.
-   - URL: `<GenLayer explorer transaction URL>`
+5. **Deploy transaction**
+   - Description: Constructor deploy, GenVM SUCCESS, consensus Accepted / FINALIZED.
+   - URL: https://explorer-studio.genlayer.com/tx/0x00dea042736f602ba2ec7dfcac92382490c5019939dffb4b82b6eccb00a1fef9
 
-## After you deploy, paste these locally before submitting
+6. **Settle transaction**
+   - Description: `settle(0)` ran leader/validator web consensus and wrote attested state. GenVM SUCCESS, consensus Accepted / FINALIZED.
+   - URL: https://explorer-studio.genlayer.com/tx/0x7e06f28a3f90942bfe0d37127668c8592913abc0470e462b9da8ab94959ac99c
+
+## Deployment record
 
 ```
-Network: <GenLayer testnet name shown in Studio>
-Contract address: <0x...>
-Deploy transaction: <explorer URL>
-Settle transaction: <explorer URL>
+Network: Studionet (studio.genlayer.com)
+Contract address: 0x12e8fFbe898b84Aad0E336120B3Bad443207a445
+Deploy transaction: 0x00dea042736f602ba2ec7dfcac92382490c5019939dffb4b82b6eccb00a1fef9
+Settle transaction: 0x7e06f28a3f90942bfe0d37127668c8592913abc0470e462b9da8ab94959ac99c
 Public repository: https://github.com/TurgayAcar49/public-source-oracle
+Explorer (contract): https://explorer-studio.genlayer.com/address/0x12e8fFbe898b84Aad0E336120B3Bad443207a445
+Explorer (deploy): https://explorer-studio.genlayer.com/tx/0x00dea042736f602ba2ec7dfcac92382490c5019939dffb4b82b6eccb00a1fef9
+Explorer (settle): https://explorer-studio.genlayer.com/tx/0x7e06f28a3f90942bfe0d37127668c8592913abc0470e462b9da8ab94959ac99c
 ```
 
-## Reviewer walkthrough (optional, if asked)
+## Reviewer walkthrough
 
 1. Deploy `contracts/public_source_oracle.py` (no constructor args).
-2. Call `register_feed("btc-usd", "https://<json-api>", "data.price", "number", 200)`.
-3. Call `get_feed_id("btc-usd")` then `get_feed(id)`: status `active`, `settlement_count` 0.
-4. Call `settle(id)`.
-5. Call `get_last_value(id)`: `kind=number`, `value` in micro-units, `http_status=200`, `settlement_count=1`.
-6. Pause as a second wallet → revert `not authorized`. Pause as creator → `settle` reverts `feed is paused`.
+2. `register_feed("oracle-repo", "https://api.github.com/repos/TurgayAcar49/public-source-oracle", "full_name", "text", 0)`.
+3. `get_feed(0)`: status `active`.
+4. `settle(0)`.
+5. `get_last_value(0)`: `kind=text`, `value=TurgayAcar49/public-source-oracle`.
 
 ## What not to claim
 

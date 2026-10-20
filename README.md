@@ -114,7 +114,13 @@ Keep `json_path` on **stable** fields. Do not attest timestamps, request ids, or
 
 Public repository: https://github.com/TurgayAcar49/public-source-oracle
 
-Paste-ready English copy lives in [`FORM.md`](FORM.md). Add the Studio contract address and explorer transaction after you deploy.
+Paste-ready English copy lives in [`FORM.md`](FORM.md).
+
+Studionet deployment:
+
+- Contract: [`0x12e8fFbe898b84Aad0E336120B3Bad443207a445`](https://explorer-studio.genlayer.com/address/0x12e8fFbe898b84Aad0E336120B3Bad443207a445)
+- Deploy: [`0x00dea042736f602ba2ec7dfcac92382490c5019939dffb4b82b6eccb00a1fef9`](https://explorer-studio.genlayer.com/tx/0x00dea042736f602ba2ec7dfcac92382490c5019939dffb4b82b6eccb00a1fef9)
+- Settle: [`0x7e06f28a3f90942bfe0d37127668c8592913abc0470e462b9da8ab94959ac99c`](https://explorer-studio.genlayer.com/tx/0x7e06f28a3f90942bfe0d37127668c8592913abc0470e462b9da8ab94959ac99c)
 
 ## What this is not
 
