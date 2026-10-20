@@ -1,0 +1,10 @@
+[project]
+name = "public-source-oracle"
+version = "1.0.0"
+description = "Reusable GenLayer Intelligent Contract that attests public JSON sources through leader/validator consensus."
+requires-python = ">=3.12"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
