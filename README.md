@@ -112,6 +112,8 @@ Keep `json_path` on **stable** fields. Do not attest timestamps, request ids, or
 
 ## Portal form
 
+Public repository: https://github.com/TurgayAcar49/public-source-oracle
+
 Paste-ready English copy lives in [`FORM.md`](FORM.md). Add the Studio contract address and explorer transaction after you deploy.
 
 ## What this is not

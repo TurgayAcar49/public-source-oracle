@@ -53,15 +53,15 @@ Add each as Description + URL. File uploads are not supported.
 
 1. **Source contract**
    - Description: Intelligent Contract source (`contracts/public_source_oracle.py`) with custom `run_nondet_unsafe` leader/validator pair.
-   - URL: `<public repository URL>`
+   - URL: https://github.com/TurgayAcar49/public-source-oracle/blob/main/contracts/public_source_oracle.py
 
 2. **README**
    - Description: State layout, consensus rule, Studio deploy steps, and how to run tests.
-   - URL: `<public repository URL>/blob/<branch>/README.md`
+   - URL: https://github.com/TurgayAcar49/public-source-oracle/blob/main/README.md
 
 3. **Tests**
    - Description: Direct-mode tests for registration, settlement, and validator agreement/disagreement (`direct_vm.run_validator()`).
-   - URL: `<public repository URL>/tree/<branch>/tests/direct`
+   - URL: https://github.com/TurgayAcar49/public-source-oracle/tree/main/tests/direct
 
 4. **Deployed contract**
    - Description: Contract deployed to GenLayer from Studio with my wallet.
@@ -78,7 +78,7 @@ Network: <GenLayer testnet name shown in Studio>
 Contract address: <0x...>
 Deploy transaction: <explorer URL>
 Settle transaction: <explorer URL>
-Public repository: <URL>
+Public repository: https://github.com/TurgayAcar49/public-source-oracle
 ```
 
 ## Reviewer walkthrough (optional, if asked)
